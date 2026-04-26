@@ -1,5 +1,6 @@
 package com.legacy_lens.entity;
 
+import com.legacy_lens.enums.NotificationType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

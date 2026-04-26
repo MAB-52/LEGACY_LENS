@@ -1,5 +1,7 @@
 package com.legacy_lens.entity;
 
+import com.legacy_lens.enums.MessageType;
+import com.legacy_lens.enums.Sender;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

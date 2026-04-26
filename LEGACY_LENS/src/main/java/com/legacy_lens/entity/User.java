@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -28,7 +29,7 @@ public class User extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private AccountStatus status = AccountStatus.ACTIVE;
-    
+
     private LocalDateTime deletedAt;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)

@@ -1,10 +1,10 @@
 package com.legacy_lens.common;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class ApiResponse<T> {
 

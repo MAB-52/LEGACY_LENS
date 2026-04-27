@@ -1,10 +1,20 @@
+<<<<<<< HEAD
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+=======
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+>>>>>>> 1ff229fb0bb4da180f29fe7d78a650f2d6c938a6
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>4.0.6</version>
+<<<<<<< HEAD
         <relativePath/>
+=======
+        <relativePath/> <!-- lookup parent from repository -->
+>>>>>>> 1ff229fb0bb4da180f29fe7d78a650f2d6c938a6
     </parent>
     <groupId>com.legacy_lens</groupId>
     <artifactId>LEGACY_LENS</artifactId>
@@ -12,11 +22,30 @@
     <packaging>war</packaging>
     <name>LEGACY_LENS</name>
     <description>LEGACY_LENS</description>
+<<<<<<< HEAD
+=======
+    <url/>
+    <licenses>
+        <license/>
+    </licenses>
+    <developers>
+        <developer/>
+    </developers>
+    <scm>
+        <connection/>
+        <developerConnection/>
+        <tag/>
+        <url/>
+    </scm>
+>>>>>>> 1ff229fb0bb4da180f29fe7d78a650f2d6c938a6
     <properties>
         <java.version>17</java.version>
     </properties>
     <dependencies>
+<<<<<<< HEAD
         <!--  Web & JPA  -->
+=======
+>>>>>>> 1ff229fb0bb4da180f29fe7d78a650f2d6c938a6
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -25,6 +54,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webmvc</artifactId>
         </dependency>
+<<<<<<< HEAD
         <!--  Spring Security  -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -71,19 +101,38 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
         <!--  DevTools  -->
+=======
+
+>>>>>>> 1ff229fb0bb4da180f29fe7d78a650f2d6c938a6
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
+<<<<<<< HEAD
         <!--  Tomcat (WAR)  -->
+=======
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+>>>>>>> 1ff229fb0bb4da180f29fe7d78a650f2d6c938a6
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <scope>provided</scope>
         </dependency>
+<<<<<<< HEAD
         <!--  Test  -->
+=======
+>>>>>>> 1ff229fb0bb4da180f29fe7d78a650f2d6c938a6
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa-test</artifactId>
@@ -95,6 +144,10 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 1ff229fb0bb4da180f29fe7d78a650f2d6c938a6
     <build>
         <plugins>
             <plugin>
@@ -147,4 +200,9 @@
             </plugin>
         </plugins>
     </build>
+<<<<<<< HEAD
 </project>
+=======
+
+</project>
+>>>>>>> 1ff229fb0bb4da180f29fe7d78a650f2d6c938a6

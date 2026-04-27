@@ -30,7 +30,6 @@ public class ApiResponse<T> {
         this.data = data;
         this.statusCode = statusCode;
 
-        //  ALWAYS set timestamp
         //this.timestamp = LocalDateTime.now();
         //UTC CONSISTENCY
         this.timestamp = LocalDateTime.now(ZoneOffset.UTC);

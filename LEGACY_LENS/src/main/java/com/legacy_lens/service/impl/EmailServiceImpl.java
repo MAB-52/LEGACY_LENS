@@ -47,7 +47,7 @@ public class EmailServiceImpl implements EmailService {
         }
     }
 
-    // ── HTML template ──────────────────────────────────────────────────────────
+    // HTML template
 
     private String buildOtpEmailHtml(String name, String otp) {
         // Split OTP into individual digit spans for the box-style rendering

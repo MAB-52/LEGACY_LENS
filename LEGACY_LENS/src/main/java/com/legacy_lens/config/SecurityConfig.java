@@ -28,7 +28,7 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserDetailsService userDetailsService;
 
-    // ─── Public endpoints (no token required) ─────────────────────────────────
+    // Public endpoints (no token required)
     private static final String[] PUBLIC_URLS = {
             "/api/v1/auth/**"
     };
@@ -58,7 +58,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // ─── Beans ─────────────────────────────────────────────────────────────────
+    // Beans
 
     @Bean
     public PasswordEncoder passwordEncoder() {

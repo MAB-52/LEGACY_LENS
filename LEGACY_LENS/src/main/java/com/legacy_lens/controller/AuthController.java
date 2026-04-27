@@ -24,11 +24,6 @@ public class AuthController {
     private final OtpService otpService;
     private final UserRepository userRepository;
 
-    /**
-     * POST /api/v1/auth/register
-     * Saves user, sends OTP email. Does NOT return a JWT yet.
-     * Response: { email: "..." } — redirect frontend to OTP screen.
-     */
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<String>> register(
             @Valid @RequestBody RegisterRequest request) {
@@ -42,11 +37,6 @@ public class AuthController {
                 ));
     }
 
-    /**
-     * POST /api/v1/auth/verify-otp
-     * Validates the OTP and marks the user as verified.
-     * Frontend should call /login immediately after this succeeds.
-     */
     @PostMapping("/verify-otp")
     public ResponseEntity<ApiResponse<Void>> verifyOtp(
             @Valid @RequestBody VerifyOtpRequest request) {
@@ -57,11 +47,6 @@ public class AuthController {
         );
     }
 
-    /**
-     * POST /api/v1/auth/resend-otp
-     * Generates a fresh OTP and re-sends the email.
-     * Useful if the first email was missed or the code expired.
-     */
     @PostMapping("/resend-otp")
     public ResponseEntity<ApiResponse<Void>> resendOtp(
             @Valid @RequestBody ResendOtpRequest request) {
@@ -73,10 +58,6 @@ public class AuthController {
         );
     }
 
-    /**
-     * POST /api/v1/auth/login
-     * Validates credentials + verified status, returns JWT.
-     */
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<AuthResponse>> login(
             @Valid @RequestBody LoginRequest request) {

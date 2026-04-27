@@ -32,7 +32,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserDetailsService userDetailsService;
     private final OtpService otpService;
 
-    // ─── Register ──────────────────────────────────────────────────────────────
+    // Register
 
     @Override
     @Transactional
@@ -57,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
         return user.getEmail();
     }
 
-    // ─── Login ─────────────────────────────────────────────────────────────────
+    // Login
 
     @Override
     public AuthResponse login(LoginRequest request) {

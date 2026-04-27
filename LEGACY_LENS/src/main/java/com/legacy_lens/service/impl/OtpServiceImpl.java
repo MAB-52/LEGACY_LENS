@@ -30,7 +30,7 @@ public class OtpServiceImpl implements OtpService {
 
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
-    // ── Generate & Send ────────────────────────────────────────────────────────
+    // Generate & Send
 
     @Override
     @Transactional
@@ -52,7 +52,7 @@ public class OtpServiceImpl implements OtpService {
         emailService.sendOtpEmail(user.getEmail(), user.getName(), code);
     }
 
-    // ── Verify ─────────────────────────────────────────────────────────────────
+    // Verify
 
     @Override
     @Transactional
@@ -87,7 +87,7 @@ public class OtpServiceImpl implements OtpService {
         log.info("Email verified successfully for user: {}", email);
     }
 
-    // ── Helper ─────────────────────────────────────────────────────────────────
+    // Helper
 
     private String generateSixDigitOtp() {
         // Produces a zero-padded 6-digit string e.g. "047382"

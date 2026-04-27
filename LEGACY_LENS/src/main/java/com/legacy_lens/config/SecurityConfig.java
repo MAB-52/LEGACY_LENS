@@ -30,7 +30,7 @@ public class SecurityConfig {
 
     // Public endpoints (no token required)
     private static final String[] PUBLIC_URLS = {
-            "/api/v1/auth/**"
+            "/legacylens/auth/**"
     };
 
     @Bean

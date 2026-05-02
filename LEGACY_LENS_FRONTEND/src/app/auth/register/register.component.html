@@ -1,0 +1,112 @@
+<div class="auth-bg">
+  <!-- Grid overlay -->
+  <div class="grid-overlay"></div>
+  <!-- Hero glow -->
+  <div class="hero-glow"></div>
+
+  <div class="auth-wrap">
+    <!-- Logo -->
+    <div class="logo-mark">
+      <span class="logo-icon">⬡</span>
+      <span class="logo-text">LegacyLens</span>
+    </div>
+
+    <div class="auth-card">
+      <!-- Header -->
+      <div class="card-head">
+        <h1 class="card-title">Create your account</h1>
+        <p class="card-sub">Start analyzing legacy code with AI intelligence.</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <!-- Name -->
+        <div class="field-group">
+          <label class="field-label" for="name">Full Name</label>
+          <input
+            id="name"
+            type="text"
+            formControlName="name"
+            class="field-input"
+            placeholder="Ada Lovelace"
+            autocomplete="name"
+          />
+          @if (f['name'].touched && f['name'].errors?.['required']) {
+            <p class="field-error">Name is required.</p>
+          }
+          @if (f['name'].touched && f['name'].errors?.['minlength']) {
+            <p class="field-error">Name must be at least 2 characters.</p>
+          }
+        </div>
+
+        <!-- Email -->
+        <div class="field-group">
+          <label class="field-label" for="email">Work Email</label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            class="field-input"
+            placeholder="you@company.com"
+            autocomplete="email"
+          />
+          @if (f['email'].touched && f['email'].errors?.['required']) {
+            <p class="field-error">Email is required.</p>
+          }
+          @if (f['email'].touched && f['email'].errors?.['email']) {
+            <p class="field-error">Enter a valid email address.</p>
+          }
+        </div>
+
+        <!-- Password -->
+        <div class="field-group">
+          <label class="field-label" for="password">Password</label>
+          <div class="pw-wrap">
+            <input
+              id="password"
+              [type]="showPw() ? 'text' : 'password'"
+              formControlName="password"
+              class="field-input"
+              placeholder="Min. 8 characters"
+              autocomplete="new-password"
+            />
+            <button type="button" class="pw-toggle" (click)="togglePw()" tabindex="-1">
+              {{ showPw() ? '🙈' : '👁' }}
+            </button>
+          </div>
+          @if (f['password'].touched && f['password'].errors?.['required']) {
+            <p class="field-error">Password is required.</p>
+          }
+          @if (f['password'].touched && f['password'].errors?.['minlength']) {
+            <p class="field-error">Password must be at least 8 characters.</p>
+          }
+        </div>
+
+        <!-- Submit -->
+        <button
+          type="submit"
+          class="btn-submit"
+          [disabled]="loading()"
+        >
+          @if (loading()) {
+            <app-loading-spinner size="sm" />
+            <span>Creating account…</span>
+          } @else {
+            <span>Create Account</span>
+            <span class="btn-arrow">→</span>
+          }
+        </button>
+      </form>
+
+      <p class="auth-footer-link">
+        Already have an account?
+        <a routerLink="/login">Sign in</a>
+      </p>
+    </div>
+
+    <!-- Trust badge -->
+    <p class="trust-badge">
+      <span class="badge-dot"></span>
+      Enterprise-grade · SOC 2 · End-to-end encrypted
+    </p>
+  </div>
+</div>

@@ -1,0 +1,157 @@
+<div class="dashboard-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-icon">⬡</span>
+      <span class="logo-text">LegacyLens</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item nav-item--active">
+        <span class="nav-icon">◈</span> Overview
+      </button>
+      <button class="nav-item">
+        <span class="nav-icon">⬡</span> Repositories
+      </button>
+      <button class="nav-item">
+        <span class="nav-icon">⚠</span> Issues
+      </button>
+      <button class="nav-item">
+        <span class="nav-icon">✦</span> AI Insights
+      </button>
+      <button class="nav-item">
+        <span class="nav-icon">📊</span> Reports
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="user-avatar">
+          {{ user()?.name?.charAt(0)?.toUpperCase() }}
+        </div>
+        <div class="user-info">
+          <p class="user-name">{{ user()?.name }}</p>
+          <p class="user-role">{{ user()?.role }}</p>
+        </div>
+      </div>
+      <button class="logout-btn" (click)="logout()">
+        <span>Sign out</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="dashboard-main">
+    <!-- Top bar -->
+    <header class="dash-header">
+      <div class="dash-header__left">
+        <h1 class="dash-title">Overview</h1>
+        <p class="dash-sub">Welcome back, <span class="name-highlight">{{ user()?.name }}</span></p>
+      </div>
+      <div class="dash-header__right">
+        <button class="header-btn header-btn--primary">
+          <span>+ Analyze Repo</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Stats grid -->
+    <section class="stats-grid">
+      @for (stat of stats; track stat.label) {
+        <div class="stat-card">
+          <div class="stat-card__top">
+            <span class="stat-icon">{{ stat.icon }}</span>
+            <span class="stat-delta" [class.stat-delta--up]="stat.positive" [class.stat-delta--down]="!stat.positive">
+              {{ stat.delta }}
+            </span>
+          </div>
+          <p class="stat-value">{{ stat.value }}</p>
+          <p class="stat-label">{{ stat.label }}</p>
+        </div>
+      }
+    </section>
+
+    <!-- Recent activity -->
+    <section class="recent-section">
+      <div class="section-header">
+        <h2 class="section-title">Recent Analyses</h2>
+        <button class="link-btn">View all →</button>
+      </div>
+
+      <div class="table-card">
+        <table class="repo-table">
+          <thead>
+            <tr>
+              <th>Repository</th>
+              <th>Language</th>
+              <th>Issues</th>
+              <th>Analyzed</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (repo of recent; track repo.name) {
+              <tr class="table-row">
+                <td class="repo-name">
+                  <span class="repo-dot"></span>
+                  {{ repo.name }}
+                </td>
+                <td class="repo-lang">{{ repo.lang }}</td>
+                <td class="repo-issues">{{ repo.issues }}</td>
+                <td class="repo-time">{{ repo.time }}</td>
+                <td>
+                  <span class="status-badge" [class]="'status-badge--' + repo.status">
+                    {{ repo.status }}
+                  </span>
+                </td>
+                <td>
+                  <button class="row-action">View →</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Info cards row -->
+    <section class="info-row">
+      <div class="info-card">
+        <h3 class="info-card__title">Account</h3>
+        <dl class="info-list">
+          <div class="info-row-item">
+            <dt>Name</dt>
+            <dd>{{ user()?.name }}</dd>
+          </div>
+          <div class="info-row-item">
+            <dt>Email</dt>
+            <dd>{{ user()?.email }}</dd>
+          </div>
+          <div class="info-row-item">
+            <dt>Role</dt>
+            <dd>
+              <span class="role-badge">{{ user()?.role }}</span>
+            </dd>
+          </div>
+          <div class="info-row-item">
+            <dt>Status</dt>
+            <dd><span class="status-active">● Active</span></dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="info-card">
+        <h3 class="info-card__title">Quick Start</h3>
+        <p class="info-card__body">
+          Connect your Git repositories to start scanning for legacy patterns, dead code, security anti-patterns and AI-powered modernization suggestions.
+        </p>
+        <div class="qs-actions">
+          <button class="qs-btn qs-btn--primary">Connect GitHub</button>
+          <button class="qs-btn">Connect GitLab</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>

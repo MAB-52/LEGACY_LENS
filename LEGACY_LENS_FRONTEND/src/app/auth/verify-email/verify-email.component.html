@@ -1,0 +1,111 @@
+<div class="auth-bg">
+  <div class="grid-overlay"></div>
+  <div class="hero-glow"></div>
+
+  <div class="auth-wrap">
+    <div class="logo-mark">
+      <span class="logo-icon">⬡</span>
+      <span class="logo-text">LegacyLens</span>
+    </div>
+
+    <div class="auth-card">
+
+      @if (success()) {
+        <!-- Success state -->
+        <div class="success-state">
+          <div class="success-icon">✓</div>
+          <h2 class="success-title">Email Verified!</h2>
+          <p class="success-sub">Redirecting you to sign in…</p>
+        </div>
+
+      } @else {
+        <div class="card-head">
+          <div class="otp-icon">📧</div>
+          <h1 class="card-title">Check your inbox</h1>
+          <p class="card-sub">
+            We sent a 6-digit code to<br />
+            <strong class="email-highlight">{{ email() }}</strong>
+          </p>
+        </div>
+
+        <!-- OTP boxes -->
+        <div class="otp-row" (paste)="onPaste($event)">
+          @for (d of digits(); track $index; let i = $index) {
+            <input
+              #otpInput
+              type="text"
+              inputmode="numeric"
+              maxlength="1"
+              class="otp-box"
+              [class.otp-box--filled]="d !== ''"
+              [value]="d"
+              (input)="onInput(i, $event)"
+              (keydown)="onKeydown(i, $event)"
+              autocomplete="one-time-code"
+              [attr.aria-label]="'OTP digit ' + (i + 1)"
+            />
+          }
+        </div>
+
+        <!-- Expiry countdown -->
+        <div class="otp-timer" [class.otp-timer--expired]="canResend()">
+          @if (!canResend()) {
+            <span class="timer-icon">⏱</span>
+            <span>Code expires in <strong class="timer-value">{{ countdownLabel }}</strong></span>
+          } @else {
+            <span class="timer-icon">⚠️</span>
+            <span class="timer-expired-text">Code has expired</span>
+          }
+        </div>
+
+        <!-- Verify button -->
+        <button
+          class="btn-submit"
+          (click)="submit()"
+          [disabled]="otpCode.length < 6 || loading()"
+        >
+          @if (loading()) {
+            <app-loading-spinner size="sm" />
+            <span>Verifying…</span>
+          } @else {
+            <span>Verify Email</span>
+            <span class="btn-arrow">→</span>
+          }
+        </button>
+
+        <!-- Resend OTP -->
+        <div class="resend-row">
+          <span class="resend-label">Didn't receive the code?</span>
+          <button
+            class="btn-resend"
+            (click)="resendOtp()"
+            [disabled]="!canResend() || resending()"
+            [class.btn-resend--active]="canResend()"
+          >
+            @if (resending()) {
+              <app-loading-spinner size="sm" />
+              <span>Sending…</span>
+            } @else if (canResend()) {
+              <span>Resend OTP</span>
+            } @else {
+              <span>Resend in {{ countdownLabel }}</span>
+            }
+          </button>
+        </div>
+
+        <p class="auth-footer-link">
+          Wrong email?
+          <a routerLink="/register">Start over</a>
+          · Already verified?
+          <a routerLink="/login">Sign in</a>
+        </p>
+      }
+
+    </div>
+
+    <p class="trust-badge">
+      <span class="badge-dot"></span>
+      OTP expires in 5 minutes · Check spam if needed
+    </p>
+  </div>
+</div>

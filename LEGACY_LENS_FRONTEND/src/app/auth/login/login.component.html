@@ -1,0 +1,94 @@
+<div class="auth-bg">
+  <div class="grid-overlay"></div>
+  <div class="hero-glow"></div>
+
+  <div class="auth-wrap">
+    <div class="logo-mark">
+      <span class="logo-icon">⬡</span>
+      <span class="logo-text">LegacyLens</span>
+    </div>
+
+    <div class="auth-card">
+      <div class="card-head">
+        <h1 class="card-title">Welcome back</h1>
+        <p class="card-sub">Sign in to your workspace to continue.</p>
+      </div>
+
+      <!-- Not-verified banner -->
+      @if (notVerifiedEmail()) {
+        <div class="verify-banner">
+          <span class="verify-banner__icon">📧</span>
+          <div class="verify-banner__body">
+            <p class="verify-banner__title">Email not verified</p>
+            <p class="verify-banner__msg">Please verify your email to continue.</p>
+          </div>
+          <button class="verify-banner__btn" (click)="goVerify()">Verify →</button>
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <!-- Email -->
+        <div class="field-group">
+          <label class="field-label" for="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            class="field-input"
+            placeholder="you@company.com"
+            autocomplete="email"
+          />
+          @if (f['email'].touched && f['email'].errors?.['required']) {
+            <p class="field-error">Email is required.</p>
+          }
+          @if (f['email'].touched && f['email'].errors?.['email']) {
+            <p class="field-error">Enter a valid email.</p>
+          }
+        </div>
+
+        <!-- Password -->
+        <div class="field-group">
+          <div class="label-row">
+            <label class="field-label" for="password">Password</label>
+          </div>
+          <div class="pw-wrap">
+            <input
+              id="password"
+              [type]="showPw() ? 'text' : 'password'"
+              formControlName="password"
+              class="field-input"
+              placeholder="Your password"
+              autocomplete="current-password"
+            />
+            <button type="button" class="pw-toggle" (click)="togglePw()" tabindex="-1">
+              {{ showPw() ? '🙈' : '👁' }}
+            </button>
+          </div>
+          @if (f['password'].touched && f['password'].errors?.['required']) {
+            <p class="field-error">Password is required.</p>
+          }
+        </div>
+
+        <button type="submit" class="btn-submit" [disabled]="loading()">
+          @if (loading()) {
+            <app-loading-spinner size="sm" />
+            <span>Signing in…</span>
+          } @else {
+            <span>Sign In</span>
+            <span class="btn-arrow">→</span>
+          }
+        </button>
+      </form>
+
+      <p class="auth-footer-link">
+        Don't have an account?
+        <a routerLink="/register">Create one free</a>
+      </p>
+    </div>
+
+    <p class="trust-badge">
+      <span class="badge-dot"></span>
+      Enterprise-grade · SOC 2 · End-to-end encrypted
+    </p>
+  </div>
+</div>

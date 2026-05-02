@@ -1,0 +1,187 @@
+<div class="admin-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-icon">⬡</span>
+      <span class="logo-text">LegacyLens</span>
+      <span class="admin-badge">ADMIN</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item" [class.nav-item--active]="activeSection() === 'overview'" (click)="setSection('overview')">
+        <span class="nav-icon">◈</span> Dashboard
+      </button>
+      <button class="nav-item" [class.nav-item--active]="activeSection() === 'users'" (click)="setSection('users')">
+        <span class="nav-icon">👥</span> User Management
+      </button>
+      <button class="nav-item" [class.nav-item--active]="activeSection() === 'audit'" (click)="setSection('audit')">
+        <span class="nav-icon">📋</span> Audit Logs
+      </button>
+      <button class="nav-item" [class.nav-item--active]="activeSection() === 'settings'" (click)="setSection('settings')">
+        <span class="nav-icon">⚙</span> Settings
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="user-avatar">{{ user()?.name?.charAt(0)?.toUpperCase() }}</div>
+        <div class="user-info">
+          <p class="user-name">{{ user()?.name }}</p>
+          <p class="user-role">Administrator</p>
+        </div>
+      </div>
+      <button class="logout-btn" (click)="logout()">Sign out</button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="admin-main">
+
+    <!-- Header -->
+    <header class="dash-header">
+      <div>
+        <div class="breadcrumb">
+          <span>Admin</span>
+          <span class="breadcrumb-sep">/</span>
+          <span class="breadcrumb-active">
+            @switch (activeSection()) {
+              @case ('overview') { Dashboard }
+              @case ('users')    { User Management }
+              @case ('audit')    { Audit Logs }
+              @case ('settings') { Settings }
+            }
+          </span>
+        </div>
+        <h1 class="dash-title">
+          @switch (activeSection()) {
+            @case ('overview') { Platform Overview }
+            @case ('users')    { User Management }
+            @case ('audit')    { Audit Logs }
+            @case ('settings') { Settings }
+          }
+        </h1>
+      </div>
+      <div class="header-actions">
+        <button class="header-btn">Export</button>
+        <button class="header-btn header-btn--primary">+ Invite User</button>
+      </div>
+    </header>
+
+    <!-- OVERVIEW -->
+    @if (activeSection() === 'overview') {
+      <section class="stats-grid" style="animation: fadeIn .35s ease">
+        @for (stat of adminStats; track stat.label) {
+          <div class="stat-card">
+            <div class="stat-card__top">
+              <span class="stat-icon">{{ stat.icon }}</span>
+              <span class="stat-delta" [class.stat-delta--up]="stat.positive">{{ stat.delta }}</span>
+            </div>
+            <p class="stat-value">{{ stat.value }}</p>
+            <p class="stat-label">{{ stat.label }}</p>
+          </div>
+        }
+      </section>
+
+      <!-- Quick user table -->
+      <div class="section-header">
+        <h2 class="section-title">Recent Users</h2>
+        <button class="link-btn" (click)="setSection('users')">View all →</button>
+      </div>
+      <ng-container *ngTemplateOutlet="usersTable"></ng-container>
+    }
+
+    <!-- USERS -->
+    @if (activeSection() === 'users') {
+      <div style="animation: fadeIn .35s ease">
+        <div class="section-header">
+          <h2 class="section-title">All Users</h2>
+          <div class="table-controls">
+            <input class="search-input" type="text" placeholder="Search users…" />
+          </div>
+        </div>
+        <ng-container *ngTemplateOutlet="usersTable"></ng-container>
+      </div>
+    }
+
+    <!-- AUDIT -->
+    @if (activeSection() === 'audit') {
+      <div style="animation: fadeIn .35s ease">
+        <div class="table-card">
+          <table class="repo-table">
+            <thead>
+              <tr>
+                <th>Event</th>
+                <th>Actor</th>
+                <th>Time</th>
+                <th>Severity</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (log of auditLogs; track log.event + log.time) {
+                <tr class="table-row">
+                  <td class="log-event">{{ log.event }}</td>
+                  <td class="repo-lang">{{ log.actor }}</td>
+                  <td class="repo-time">{{ log.time }}</td>
+                  <td>
+                    <span class="status-badge" [class]="'status-badge--' + log.severity">{{ log.severity }}</span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+
+    <!-- SETTINGS -->
+    @if (activeSection() === 'settings') {
+      <div class="placeholder-section" style="animation: fadeIn .35s ease">
+        <span class="placeholder-icon">⚙</span>
+        <h3>Platform Settings</h3>
+        <p>Global configuration, integrations and security policies coming soon.</p>
+      </div>
+    }
+
+  </main>
+</div>
+
+<!-- Shared users table template -->
+<ng-template #usersTable>
+  <div class="table-card">
+    <table class="repo-table">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Joined</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (u of recentUsers; track u.email) {
+          <tr class="table-row">
+            <td class="user-cell">
+              <div class="mini-avatar">{{ u.name.charAt(0) }}</div>
+              {{ u.name }}
+            </td>
+            <td class="repo-lang">{{ u.email }}</td>
+            <td>
+              <span class="role-badge" [class.role-badge--admin]="u.role === 'ADMIN'">{{ u.role }}</span>
+            </td>
+            <td>
+              <span class="status-badge" [class.status-badge--good]="u.status === 'active'" [class.status-badge--warning]="u.status === 'inactive'">
+                {{ u.status }}
+              </span>
+            </td>
+            <td class="repo-time">{{ u.joined }}</td>
+            <td>
+              <button class="row-action">Manage →</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</ng-template>

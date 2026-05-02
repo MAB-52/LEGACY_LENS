@@ -1,0 +1,9 @@
+<div class="toast-container" aria-live="polite">
+  @for (toast of toastSvc.toasts(); track trackById($index, toast)) {
+    <div class="toast" [class]="'toast--' + toast.type" @slideIn>
+      <span class="toast__icon">{{ icon(toast.type) }}</span>
+      <span class="toast__msg">{{ toast.message }}</span>
+      <button class="toast__close" (click)="toastSvc.remove(toast.id)" aria-label="Dismiss">×</button>
+    </div>
+  }
+</div>

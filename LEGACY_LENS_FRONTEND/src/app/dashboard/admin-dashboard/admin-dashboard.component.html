@@ -1,12 +1,10 @@
 <div class="admin-shell">
-  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="sidebar-logo">
       <span class="logo-icon">⬡</span>
       <span class="logo-text">LegacyLens</span>
       <span class="admin-badge">ADMIN</span>
     </div>
-
     <nav class="sidebar-nav">
       <button class="nav-item" [class.nav-item--active]="activeSection() === 'overview'" (click)="setSection('overview')">
         <span class="nav-icon">◈</span> Dashboard
@@ -21,7 +19,6 @@
         <span class="nav-icon">⚙</span> Settings
       </button>
     </nav>
-
     <div class="sidebar-footer">
       <div class="user-chip">
         <div class="user-avatar">{{ user()?.name?.charAt(0)?.toUpperCase() }}</div>
@@ -34,10 +31,7 @@
     </div>
   </aside>
 
-  <!-- Main -->
   <main class="admin-main">
-
-    <!-- Header -->
     <header class="dash-header">
       <div>
         <div class="breadcrumb">
@@ -62,7 +56,7 @@
         </h1>
       </div>
       <div class="header-actions">
-        <button class="header-btn">Export</button>
+        <!-- <button class="header-btn">Export</button> -->
         <button class="header-btn header-btn--primary">+ Invite User</button>
       </div>
     </header>
@@ -81,26 +75,16 @@
           </div>
         }
       </section>
-
-      <!-- Quick user table -->
       <div class="section-header">
         <h2 class="section-title">Recent Users</h2>
         <button class="link-btn" (click)="setSection('users')">View all →</button>
       </div>
-      <ng-container *ngTemplateOutlet="usersTable"></ng-container>
+      <app-admin-user-management (navigate)="onManageUser($any($event))" />
     }
 
     <!-- USERS -->
     @if (activeSection() === 'users') {
-      <div style="animation: fadeIn .35s ease">
-        <div class="section-header">
-          <h2 class="section-title">All Users</h2>
-          <div class="table-controls">
-            <input class="search-input" type="text" placeholder="Search users…" />
-          </div>
-        </div>
-        <ng-container *ngTemplateOutlet="usersTable"></ng-container>
-      </div>
+      <app-admin-user-management (navigate)="onManageUser($any($event))" />
     }
 
     <!-- AUDIT -->
@@ -109,12 +93,7 @@
         <div class="table-card">
           <table class="repo-table">
             <thead>
-              <tr>
-                <th>Event</th>
-                <th>Actor</th>
-                <th>Time</th>
-                <th>Severity</th>
-              </tr>
+              <tr><th>Event</th><th>Actor</th><th>Time</th><th>Severity</th></tr>
             </thead>
             <tbody>
               @for (log of auditLogs; track log.event + log.time) {
@@ -123,7 +102,9 @@
                   <td class="repo-lang">{{ log.actor }}</td>
                   <td class="repo-time">{{ log.time }}</td>
                   <td>
-                    <span class="status-badge" [class]="'status-badge--' + log.severity">{{ log.severity }}</span>
+                    <span class="status-badge" [class]="'status-badge--' + log.severity">
+                      {{ log.severity }}
+                    </span>
                   </td>
                 </tr>
               }
@@ -141,47 +122,5 @@
         <p>Global configuration, integrations and security policies coming soon.</p>
       </div>
     }
-
   </main>
 </div>
-
-<!-- Shared users table template -->
-<ng-template #usersTable>
-  <div class="table-card">
-    <table class="repo-table">
-      <thead>
-        <tr>
-          <th>User</th>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Status</th>
-          <th>Joined</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (u of recentUsers; track u.email) {
-          <tr class="table-row">
-            <td class="user-cell">
-              <div class="mini-avatar">{{ u.name.charAt(0) }}</div>
-              {{ u.name }}
-            </td>
-            <td class="repo-lang">{{ u.email }}</td>
-            <td>
-              <span class="role-badge" [class.role-badge--admin]="u.role === 'ADMIN'">{{ u.role }}</span>
-            </td>
-            <td>
-              <span class="status-badge" [class.status-badge--good]="u.status === 'active'" [class.status-badge--warning]="u.status === 'inactive'">
-                {{ u.status }}
-              </span>
-            </td>
-            <td class="repo-time">{{ u.joined }}</td>
-            <td>
-              <button class="row-action">Manage →</button>
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  </div>
-</ng-template>

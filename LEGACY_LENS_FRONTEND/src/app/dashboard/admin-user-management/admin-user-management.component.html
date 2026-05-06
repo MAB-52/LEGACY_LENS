@@ -1,0 +1,175 @@
+<div class="um-wrapper">
+
+  <!-- Section header -->
+  <div class="um-header">
+    <div class="um-header__left">
+      <h2 class="um-title">
+        All Users
+        @if (totalElements() > 0) {
+          <span class="count-badge">{{ totalElements() }}</span>
+        }
+      </h2>
+      <p class="um-subtitle">Manage all registered users on the platform.</p>
+    </div>
+    <div class="um-header__right">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input
+          class="search-input"
+          type="text"
+          placeholder="Search by name or email…"
+          [value]="searchQuery()"
+          (input)="onSearchChange($any($event.target).value)"
+        />
+        @if (searchQuery()) {
+          <button class="search-clear" (click)="onSearchChange('')">✕</button>
+        }
+      </div>
+
+      <!-- Export button -->
+      <button
+        class="export-btn"
+        [class.export-btn--loading]="isExporting()"
+        [disabled]="isExporting() || totalElements() === 0"
+        (click)="exportCsv()"
+        [title]="searchQuery() ? 'Export filtered results as CSV' : 'Export all users as CSV'"
+      >
+        @if (isExporting()) {
+          <span class="export-spinner"></span>
+          Exporting…
+        } @else {
+          <span class="export-icon">↓</span>
+          Export CSV
+        }
+      </button>
+    </div>
+  </div>
+
+  <!-- Table card -->
+  <div class="table-card">
+
+    <!-- Loading skeleton -->
+    @if (isLoading()) {
+      <div class="skeleton-body">
+        @for (i of [1,2,3,4,5,6,7]; track i) {
+          <div class="skeleton-row" [style.animation-delay]="(i * 0.05) + 's'">
+            <div class="sk sk--avatar"></div>
+            <div class="sk-col">
+              <div class="sk sk--name"></div>
+              <div class="sk sk--email"></div>
+            </div>
+            <div class="sk sk--badge"></div>
+            <div class="sk sk--badge"></div>
+            <div class="sk sk--time"></div>
+            <div class="sk sk--action"></div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Empty state -->
+    @if (!isLoading() && users().length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">👤</div>
+        <h3 class="empty-title">No users found</h3>
+        <p class="empty-desc">
+          @if (searchQuery()) {
+            No results for <strong>"{{ searchQuery() }}"</strong>. Try a different search.
+          } @else {
+            There are no users with the USER role yet.
+          }
+        </p>
+        @if (searchQuery()) {
+          <button class="clear-btn" (click)="onSearchChange('')">Clear search</button>
+        }
+      </div>
+    }
+
+    <!-- Table -->
+    @if (!isLoading() && users().length > 0) {
+      <table class="um-table">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Joined</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (u of users(); track u.publicId) {
+            <tr class="um-row">
+              <td>
+                <div class="user-cell">
+                  <div class="avatar">{{ initials(u.name) }}</div>
+                  <div class="user-meta">
+                    <span class="user-name">{{ u.name }}</span>
+                    @if (!u.verified && !u.isVerified) {
+                      <span class="unverified-pill">Unverified</span>
+                    }
+                  </div>
+                </div>
+              </td>
+              <td class="cell--muted">{{ u.email }}</td>
+              <td><span class="role-badge">USER</span></td>
+              <td>
+                <span
+                  class="status-badge"
+                  [class.status-badge--active]="u.status === 'ACTIVE'"
+                  [class.status-badge--inactive]="u.status === 'INACTIVE'"
+                >
+                  <span class="status-dot"></span>
+                  {{ u.status }}
+                </span>
+              </td>
+              <td class="cell--time">{{ relativeTime(u.createdAt) }}</td>
+              <td class="cell--action">
+                <button class="manage-btn" (click)="onManage(u)">
+                  Manage <span class="manage-arrow">→</span>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+
+  </div>
+
+  <!-- Pagination -->
+  @if (!isLoading() && totalPages() > 1) {
+    <div class="pagination">
+      <span class="page-info">
+        Page {{ currentPage() + 1 }} of {{ totalPages() }}
+      </span>
+      <div class="page-btns">
+        <button
+          class="page-btn"
+          [disabled]="currentPage() === 0"
+          (click)="goToPage(currentPage() - 1)"
+        >← Prev</button>
+
+        @for (p of pages(); track p) {
+          @if (p === 0 || p === totalPages() - 1 || (p >= currentPage() - 1 && p <= currentPage() + 1)) {
+            <button
+              class="page-btn"
+              [class.page-btn--active]="p === currentPage()"
+              (click)="goToPage(p)"
+            >{{ p + 1 }}</button>
+          } @else if (p === currentPage() - 2 || p === currentPage() + 2) {
+            <span class="page-ellipsis">…</span>
+          }
+        }
+
+        <button
+          class="page-btn"
+          [disabled]="currentPage() === totalPages() - 1"
+          (click)="goToPage(currentPage() + 1)"
+        >Next →</button>
+      </div>
+    </div>
+  }
+
+</div>

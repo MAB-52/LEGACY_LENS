@@ -46,4 +46,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             @Param("role")   Role   role,
             @Param("search") String search
     );
+
+    long countByRoleAndDeletedAtIsNull(Role role);
 }

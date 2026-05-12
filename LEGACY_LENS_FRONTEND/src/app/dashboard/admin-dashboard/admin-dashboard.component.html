@@ -64,11 +64,13 @@
     <!-- OVERVIEW -->
     @if (activeSection() === 'overview') {
       <section class="stats-grid" style="animation: fadeIn .35s ease">
-        @for (stat of adminStats; track stat.label) {
+        @for (stat of adminStats(); track stat.label) {
           <div class="stat-card">
             <div class="stat-card__top">
               <span class="stat-icon">{{ stat.icon }}</span>
-              <span class="stat-delta" [class.stat-delta--up]="stat.positive">{{ stat.delta }}</span>
+              <!-- <span class="stat-delta" [class.stat-delta--up]="stat.positive">
+                {{ stat.delta }}
+              </span> -->
             </div>
             <p class="stat-value">{{ stat.value }}</p>
             <p class="stat-label">{{ stat.label }}</p>

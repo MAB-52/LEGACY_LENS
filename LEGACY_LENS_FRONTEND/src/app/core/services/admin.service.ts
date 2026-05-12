@@ -39,4 +39,19 @@ export class AdminUserService {
             responseType: 'blob',   // tells HttpClient to treat response as binary
         });
     }
+
+    // ── Dashboard stats ─────────────────────
+    getStats(): Observable<{
+        totalUsers: number;
+        activeSessions: number;
+        reposIndexed: number;
+        errorRate: number;
+    }> {
+        return this.http.get<{
+            totalUsers: number;
+            activeSessions: number;
+            reposIndexed: number;
+            errorRate: number;
+        }>(`${this.base}/stats`);
+    }
 }

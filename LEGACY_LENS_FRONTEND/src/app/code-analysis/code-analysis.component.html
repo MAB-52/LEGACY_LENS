@@ -1,0 +1,304 @@
+<!-- ═══════════════════════════════════════════════════════════════
+     CODE ANALYSIS — Full-page component (sits inside app-layout)
+═══════════════════════════════════════════════════════════════ -->
+
+<div class="ca-shell">
+
+    <!-- ── TOP BAR ───────────────────────────────────────────────── -->
+    <header class="ca-topbar">
+        <button class="ca-back" (click)="backToDashboard()">← Dashboard</button>
+
+        <div class="ca-topbar-center">
+            <div class="ca-stepper">
+                <div class="ca-step" [class.active]="step() === 'upload'" [class.done]="step() !== 'upload'">
+                    <span class="ca-step-num">1</span>
+                    <span class="ca-step-label">Paste Code</span>
+                </div>
+                <div class="ca-step-line" [class.done]="['options','processing','results'].includes(step())"></div>
+                <div class="ca-step" [class.active]="step() === 'options'"
+                    [class.done]="['processing','results'].includes(step())">
+                    <span class="ca-step-num">2</span>
+                    <span class="ca-step-label">Options</span>
+                </div>
+                <div class="ca-step-line" [class.done]="['processing','results'].includes(step())"></div>
+                <div class="ca-step" [class.active]="step() === 'processing'" [class.done]="step() === 'results'">
+                    <span class="ca-step-num">3</span>
+                    <span class="ca-step-label">Analyze</span>
+                </div>
+                <div class="ca-step-line" [class.done]="step() === 'results'"></div>
+                <div class="ca-step" [class.active]="step() === 'results'">
+                    <span class="ca-step-num">4</span>
+                    <span class="ca-step-label">Results</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="ca-topbar-right">
+            <span class="ca-brand">🔬 LegacyLens</span>
+        </div>
+    </header>
+
+    <!-- ════════════════════════════════════════════════════════════
+       STEP 1 — UPLOAD / PASTE
+  ════════════════════════════════════════════════════════════ -->
+    @if (step() === 'upload') {
+    <div class="ca-body fade-in">
+        <div class="ca-page-header">
+            <h1 class="ca-page-title">Paste Your Legacy Code</h1>
+            <p class="ca-page-sub">LegacyLens will detect the language automatically and prepare it for AI analysis.</p>
+        </div>
+
+        <div class="ca-upload-grid">
+
+            <!-- Editor Card -->
+            <div class="ca-editor-card">
+                <div class="ca-editor-topbar">
+                    <div class="ca-editor-dots">
+                        <span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span>
+                    </div>
+                    <span class="ca-editor-filename">legacy_code{{ detectedLang() !== 'Detecting...' ? '.' +
+                        detectedLang().toLowerCase().split(' ')[0] : '' }}</span>
+                    <div class="ca-editor-actions">
+                        @if (confidence() > 0) {
+                        <span class="ca-lang-badge">✓ {{ detectedLang() }}</span>
+                        } @else {
+                        <span class="ca-lang-badge detecting">🔍 Detecting...</span>
+                        }
+                    </div>
+                </div>
+                <textarea class="ca-code-textarea" placeholder="// Paste your legacy code here...
+// LegacyLens will detect the language and run AI analysis using your local Ollama instance.
+
+public class PayrollProcessor {
+    private static final double TAX_RATE = 0.35;
+    
+    public double calculateNetSalary(double grossSalary) {
+        double tax = grossSalary * TAX_RATE;
+        return grossSalary - tax;
+    }
+}" [(ngModel)]="pastedCode" (input)="onCodeInput(pastedCode)"></textarea>
+                <div class="ca-editor-footer">
+                    <span class="ca-line-count">{{ lineCount() }} lines</span>
+                    <span class="ca-char-hint">{{ code().length > 0 ? code().length + ' characters' : 'Start typing or
+                        paste code above' }}</span>
+                </div>
+            </div>
+
+            <!-- Detection Side Panel -->
+            <div class="ca-detect-panel">
+                <div class="ca-detect-card" [class.has-lang]="confidence() > 0">
+                    <div class="ca-detect-label">Language Detected</div>
+                    <div class="ca-detect-lang">{{ detectedLang() }}</div>
+
+                    @if (confidence() > 0) {
+                    <div class="ca-conf-row">
+                        <span class="ca-conf-label">Confidence</span>
+                        <span class="ca-conf-val">{{ confidence() }}%</span>
+                    </div>
+                    <div class="ca-conf-bar">
+                        <div class="ca-conf-fill" [style.width.%]="confidence()"></div>
+                    </div>
+                    }
+
+                    <div class="ca-detect-hints">
+                        <div class="ca-hint-item">📋 Paste any legacy language</div>
+                        <div class="ca-hint-item">🤖 Ollama runs locally on your machine</div>
+                        <div class="ca-hint-item">🔒 Your code never leaves your network</div>
+                    </div>
+                </div>
+
+                <!-- Ollama Status -->
+                <!-- <div class="ca-ollama-card">
+                    <div class="ca-ollama-icon">🦙</div>
+                    <div class="ca-ollama-info">
+                        <div class="ca-ollama-title">Ollama</div>
+                        <div class="ca-ollama-sub">localhost:11434</div>
+                    </div>
+                    <span class="ca-ollama-dot"></span>
+                </div> -->
+                <!-- Ollama status + model selector card -->
+                <div class="ollama-card">
+                    <div class="ollama-header">
+                        <div class="ca-ollama-icon">🦙</div>
+                        <div>
+                            <div class="ollama-title">Ollama</div>
+                            <div class="ollama-host">localhost:11434</div>
+                        </div>
+                        <span class="ollama-dot"></span>
+                    </div>
+
+                    <div class="model-selector" *ngIf="!modelsLoading()">
+                        <label class="model-label">Model</label>
+                        <select class="model-select" [ngModel]="selectedModel()"
+                            (ngModelChange)="selectedModel.set($event)">
+                            <option *ngFor="let m of availableModels()" [value]="m">{{ m }}</option>
+                        </select>
+                        <div *ngIf="availableModels().length === 0" class="no-models">
+                            ⚠️ No models found. Run <code>ollama pull &lt;model&gt;</code>
+                        </div>
+                    </div>
+
+                    <div *ngIf="modelsLoading()" class="models-loading">
+                        Loading models...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ca-actions">
+            <button class="ca-btn-ghost" (click)="backToDashboard()">Cancel</button>
+            <button class="ca-btn-primary" [disabled]="!code().trim()" (click)="goToOptions()">
+                Continue to Options →
+            </button>
+        </div>
+    </div>
+    }
+
+    <!-- ════════════════════════════════════════════════════════════
+       STEP 2 — ANALYSIS OPTIONS
+  ════════════════════════════════════════════════════════════ -->
+    @if (step() === 'options') {
+    <div class="ca-body fade-in">
+        <div class="ca-page-header">
+            <h1 class="ca-page-title">Select Analysis Types</h1>
+            <p class="ca-page-sub">Choose one or more analyses to run in parallel on your code.</p>
+        </div>
+
+        <!-- Code context strip -->
+        <div class="ca-context-strip">
+            <span class="ca-context-icon">📄</span>
+            <span class="ca-context-text">{{ lineCount() }} lines of code</span>
+            <span class="ca-tag ca-tag-accent">{{ detectedLang() }}</span>
+            <span class="ca-tag ca-tag-amber">{{ lineCount() }} lines</span>
+        </div>
+
+        <!-- Options grid -->
+        <div class="ca-options-grid">
+            @for (opt of options; track opt.key) {
+            <div class="ca-option-card" [class.selected]="isSelected(opt.key)" (click)="toggleOption(opt.key)">
+                <div class="ca-option-check">{{ isSelected(opt.key) ? '✓' : '' }}</div>
+                <div class="ca-option-icon">{{ opt.icon }}</div>
+                <div class="ca-option-title">{{ opt.label }}</div>
+                <div class="ca-option-desc">{{ opt.description }}</div>
+            </div>
+            }
+        </div>
+
+        <div class="ca-actions ca-actions-space">
+            <span class="ca-selected-hint">{{ selectedCount() }} analysis type{{ selectedCount() !== 1 ? 's' : '' }}
+                selected</span>
+            <div class="ca-actions-right">
+                <button class="ca-btn-ghost" (click)="step.set('upload')">← Back</button>
+                <button class="ca-btn-primary" [disabled]="selectedCount() === 0" (click)="runAnalysis()">
+                    Run Analysis →
+                </button>
+            </div>
+        </div>
+    </div>
+    }
+
+    <!-- ════════════════════════════════════════════════════════════
+       STEP 3 — PROCESSING
+  ════════════════════════════════════════════════════════════ -->
+    @if (step() === 'processing') {
+    <div class="ca-body fade-in">
+        <div class="ca-processing-wrap">
+            <div class="ca-orb">
+                <span class="ca-orb-emoji">🔬</span>
+            </div>
+            <h2 class="ca-processing-title">Analyzing with Ollama</h2>
+            <p class="ca-processing-sub">Running {{ selectedCount() }} analysis type{{ selectedCount() !== 1 ? 's' : ''
+                }} on your code...</p>
+
+            <div class="ca-proc-steps">
+                @for (s of processingSteps; track s.id) {
+                <div class="ca-proc-step" [ngClass]="s.status()">
+                    <span class="ca-proc-icon">{{ s.icon }}</span>
+                    <span class="ca-proc-label">{{ s.label }}</span>
+                    <span class="ca-proc-status">
+                        @if (s.status() === 'done') { ✅ }
+                        @else if (s.status() === 'active') { <span class="ca-spinner"></span> }
+                        @else { ⋯ }
+                    </span>
+                </div>
+                }
+            </div>
+
+            <div class="ca-progress-wrap">
+                <div class="ca-progress-labels">
+                    <span>Processing...</span>
+                    <span>{{ progressPct() }}%</span>
+                </div>
+                <div class="ca-progress-track">
+                    <div class="ca-progress-fill" [style.width.%]="progressPct()"></div>
+                </div>
+            </div>
+
+            <p class="ca-processing-note">This may take 30–120 seconds depending on code size and selected model.</p>
+        </div>
+    </div>
+    }
+
+    <!-- ════════════════════════════════════════════════════════════
+       STEP 4 — RESULTS
+  ════════════════════════════════════════════════════════════ -->
+    @if (step() === 'results') {
+    <div class="ca-body fade-in">
+
+        <!-- Error state -->
+        @if (error()) {
+        <div class="ca-error-banner">
+            <span class="ca-error-icon">❌</span>
+            <div>
+                <div class="ca-error-title">Analysis Failed</div>
+                <div class="ca-error-msg">{{ error() }}</div>
+            </div>
+            <button class="ca-btn-ghost" (click)="startOver()">Try Again</button>
+        </div>
+        }
+
+        @if (result()) {
+        <!-- Results header -->
+        <div class="ca-results-header">
+            <div class="ca-results-meta">
+                <div class="ca-results-title">Analysis Complete</div>
+                <div class="ca-results-sub">
+                    {{ result()!.detectedLanguage }} ·
+                    {{ result()!.lineCount }} lines ·
+                    {{ formatDuration(result()!.durationMs) }} ·
+                    {{ resultKeys().length }} analyses
+                </div>
+            </div>
+            <div class="ca-results-badges">
+                <span class="ca-tag ca-tag-accent">{{ result()!.detectedLanguage }}</span>
+                <span class="ca-tag ca-tag-green">✅ Complete</span>
+            </div>
+            <div class="ca-results-actions-top">
+                <button class="ca-btn-small" (click)="copyResult()">📋 Copy</button>
+                <button class="ca-btn-small" (click)="startOver()">🔁 New Analysis</button>
+            </div>
+        </div>
+
+        <!-- Tab bar -->
+        <div class="ca-result-tabs">
+            @for (key of resultKeys(); track key) {
+            <button class="ca-result-tab" [class.active]="activeTab() === key" (click)="activeTab.set(key)">
+                {{ tabIcon(key) }} {{ tabLabel(key) }}
+            </button>
+            }
+        </div>
+
+        <!-- Tab content -->
+        <div class="ca-result-panel">
+            <pre class="ca-result-pre">{{ activeResult() }}</pre>
+        </div>
+        }
+
+        <div class="ca-actions" style="margin-top: 24px;">
+            <button class="ca-btn-ghost" (click)="step.set('options')">← Back to Options</button>
+            <button class="ca-btn-primary" (click)="startOver()">New Analysis</button>
+        </div>
+    </div>
+    }
+
+</div>

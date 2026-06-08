@@ -16,7 +16,10 @@
       <button class="nav-item">
         <span class="nav-icon">⚠</span> Issues
       </button> -->
-      <button class="nav-item">
+      <!-- <button class="nav-item">
+        <span class="nav-icon">✦</span> Analyze
+      </button> -->
+      <button class="nav-item" routerLink="/code-analysis">
         <span class="nav-icon">✦</span> Analyze
       </button>
       <button class="nav-item">
@@ -49,7 +52,10 @@
         <p class="dash-sub">Welcome back, <span class="name-highlight">{{ user()?.name }}</span></p>
       </div>
       <div class="dash-header__right">
-        <button class="header-btn header-btn--primary">
+        <!-- <button class="header-btn header-btn--primary">
+          <span>+ Analyze</span>
+        </button> -->
+        <button class="header-btn header-btn--primary" routerLink="/code-analysis">
           <span>+ Analyze</span>
         </button>
       </div>
@@ -58,16 +64,16 @@
     <!-- Stats grid -->
     <section class="stats-grid">
       @for (stat of stats; track stat.label) {
-        <div class="stat-card">
-          <div class="stat-card__top">
-            <span class="stat-icon">{{ stat.icon }}</span>
-            <span class="stat-delta" [class.stat-delta--up]="stat.positive" [class.stat-delta--down]="!stat.positive">
-              {{ stat.delta }}
-            </span>
-          </div>
-          <p class="stat-value">{{ stat.value }}</p>
-          <p class="stat-label">{{ stat.label }}</p>
+      <div class="stat-card">
+        <div class="stat-card__top">
+          <span class="stat-icon">{{ stat.icon }}</span>
+          <span class="stat-delta" [class.stat-delta--up]="stat.positive" [class.stat-delta--down]="!stat.positive">
+            {{ stat.delta }}
+          </span>
         </div>
+        <p class="stat-value">{{ stat.value }}</p>
+        <p class="stat-label">{{ stat.label }}</p>
+      </div>
       }
     </section>
 
@@ -92,23 +98,23 @@
           </thead>
           <tbody>
             @for (repo of recent; track repo.name) {
-              <tr class="table-row">
-                <td class="repo-name">
-                  <span class="repo-dot"></span>
-                  {{ repo.name }}
-                </td>
-                <td class="repo-lang">{{ repo.lang }}</td>
-                <td class="repo-issues">{{ repo.issues }}</td>
-                <td class="repo-time">{{ repo.time }}</td>
-                <td>
-                  <span class="status-badge" [class]="'status-badge--' + repo.status">
-                    {{ repo.status }}
-                  </span>
-                </td>
-                <td>
-                  <button class="row-action">View →</button>
-                </td>
-              </tr>
+            <tr class="table-row">
+              <td class="repo-name">
+                <span class="repo-dot"></span>
+                {{ repo.name }}
+              </td>
+              <td class="repo-lang">{{ repo.lang }}</td>
+              <td class="repo-issues">{{ repo.issues }}</td>
+              <td class="repo-time">{{ repo.time }}</td>
+              <td>
+                <span class="status-badge" [class]="'status-badge--' + repo.status">
+                  {{ repo.status }}
+                </span>
+              </td>
+              <td>
+                <button class="row-action">View →</button>
+              </td>
+            </tr>
             }
           </tbody>
         </table>
@@ -144,7 +150,8 @@
       <div class="info-card">
         <h3 class="info-card__title">Quick Start</h3>
         <p class="info-card__body">
-          Connect your Git repositories to start scanning for legacy patterns, dead code, security anti-patterns and AI-powered modernization suggestions.
+          Connect your Git repositories to start scanning for legacy patterns, dead code, security anti-patterns and
+          AI-powered modernization suggestions.
         </p>
         <div class="qs-actions">
           <button class="qs-btn qs-btn--primary">Connect GitHub</button>
